@@ -18,6 +18,7 @@ type UseFriendsResult = {
   incoming: FriendRow[];
   outgoing: FriendRow[];
   sendRequest: (addresseeId: string) => Promise<void>;
+sendRequestByTag: (tag: string) => Promise<void>;
   acceptRequest: (friendRowId: string) => Promise<void>;
   declineRequest: (friendRowId: string) => Promise<void>;
   unfriendRequest: (friendRowId: string) => Promise<void>;
@@ -88,14 +89,94 @@ export function useFriends(myProfileId: string | null): UseFriendsResult {
     };
   }, [myProfileId, load, supabase]);
 
-  const sendRequest = useCallback(
-    async (addresseeId: string) => {
-      if (!myProfileId) return;
-      await supabase.from("friends").insert({ requester_id: myProfileId, addressee_id: addresseeId });
-      await load();
-    },
-    [myProfileId, supabase, load]
-  );
+const sendRequest = useCallback(
+  async (addresseeId: string) => {
+    if (!myProfileId) {
+      throw new Error("You must be logged in.");
+    }
+
+    if (!addresseeId) {
+      throw new Error("Invalid player ID.");
+    }
+
+    if (addresseeId === myProfileId) {
+      throw new Error("You cannot add yourself.");
+    }
+
+    const { data: existingRequest, error: existingError } = await supabase
+      .from("friends")
+      .select("id, status")
+      .or(
+        `and(requester_id.eq.${myProfileId},addressee_id.eq.${addresseeId}),and(requester_id.eq.${addresseeId},addressee_id.eq.${myProfileId})`
+      )
+      .maybeSingle();
+
+    if (existingError) {
+      throw new Error(existingError.message);
+    }
+
+    if (existingRequest) {
+      if (existingRequest.status === "accepted") {
+        throw new Error("You are already friends with this player.");
+      }
+
+      throw new Error("A friend request already exists.");
+    }
+
+    const { error: insertError } = await supabase.from("friends").insert({
+      requester_id: myProfileId,
+      addressee_id: addresseeId,
+      status: "pending",
+    });
+
+    if (insertError) {
+      throw new Error(insertError.message);
+    }
+
+    await load();
+  },
+  [myProfileId, supabase, load]
+);
+
+const sendRequestByTag = useCallback(
+  async (tag: string) => {
+    if (!myProfileId) {
+      throw new Error("You must be logged in.");
+    }
+
+    const value = tag.trim();
+    const separatorIndex = value.lastIndexOf("#");
+
+    if (separatorIndex <= 0 || separatorIndex === value.length - 1) {
+      throw new Error("Use the format Player#0478.");
+    }
+
+    const displayName = value.slice(0, separatorIndex).trim();
+    const discriminator = value.slice(separatorIndex + 1).trim();
+
+    if (!displayName || !discriminator) {
+      throw new Error("Use the format Player#0478.");
+    }
+
+    const { data: targetProfile, error: profileError } = await supabase
+      .from("profiles")
+      .select("id, display_name, discriminator")
+      .eq("display_name", displayName)
+      .eq("discriminator", discriminator)
+      .maybeSingle();
+
+    if (profileError) {
+      throw new Error(profileError.message);
+    }
+
+    if (!targetProfile) {
+      throw new Error(`Player ${value} was not found.`);
+    }
+
+    await sendRequest(targetProfile.id);
+  },
+  [myProfileId, supabase, sendRequest]
+);
 
   const acceptRequest = useCallback(
     async (friendRowId: string) => {
@@ -139,5 +220,15 @@ export function useFriends(myProfileId: string | null): UseFriendsResult {
     [friends, incoming, outgoing]
   );
 
-   return { friends, incoming, outgoing, sendRequest, acceptRequest, declineRequest, unfriendRequest, statusWith };
+  return {
+  friends,
+  incoming,
+  outgoing,
+  sendRequest,
+  sendRequestByTag,
+  acceptRequest,
+  declineRequest,
+  unfriendRequest,
+  statusWith,
+};
 }

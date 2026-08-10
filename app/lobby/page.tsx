@@ -21,7 +21,14 @@ export default function LobbyEntryPage() {
   const [activeChat, setActiveChat] = useState<FriendRow | null>(null);
   const [pendingUnfriend, setPendingUnfriend] = useState<FriendRow | null>(null);
   const { profile } = useProfile();
-  const { friends, incoming, acceptRequest, declineRequest, unfriendRequest } = useFriends(profile?.id ?? null);
+const {
+  friends,
+  incoming,
+  acceptRequest,
+  declineRequest,
+  unfriendRequest,
+  sendRequestByTag,
+} = useFriends(profile?.id ?? null);
   const router = useRouter();
   const supabase = createClient();
 
@@ -94,14 +101,17 @@ export default function LobbyEntryPage() {
     <main className="relative min-h-screen bg-slate-950 bg-grid flex flex-col items-center justify-center px-4 sm:px-6 py-10 gap-6">
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950 via-transparent to-slate-950" />
 
-      <TopBar
-        friends={friends}
-        incoming={incoming}
-        onAccept={acceptRequest}
-        onDecline={declineRequest}
-        onMessage={setActiveChat}
-        onUnfriend={(id) => setPendingUnfriend(friends.find((f) => f.id === id) ?? null)}
-      />
+   <TopBar
+  friends={friends}
+  incoming={incoming}
+  onAccept={acceptRequest}
+  onDecline={declineRequest}
+  onMessage={setActiveChat}
+  onUnfriend={(id) =>
+    setPendingUnfriend(friends.find((friend) => friend.id === id) ?? null)
+  }
+  onAddFriend={sendRequestByTag}
+/>
 
       <div className="relative z-10 w-full max-w-sm sm:max-w-md flex flex-col items-center gap-8">
         <div className="flex flex-col items-center gap-2 text-center">

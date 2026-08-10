@@ -7,6 +7,7 @@ type ButtonProps = {
   variant?: "primary" | "secondary" | "outline";
   fullWidth?: boolean;
   disabled?: boolean;
+  className?: string;
 };
 
 const variants = {
@@ -25,6 +26,7 @@ export default function Button({
   variant = "primary",
   fullWidth = true,
   disabled = false,
+  className = "",
 }: ButtonProps) {
   return (
     <button
@@ -34,6 +36,7 @@ export default function Button({
       className={`
         ${fullWidth ? "w-full" : "w-auto"}
         ${variants[variant]}
+        ${className}
         px-6 py-3 rounded-lg font-medium text-sm sm:text-base
         transition-colors duration-150
         disabled:opacity-40 disabled:cursor-not-allowed
