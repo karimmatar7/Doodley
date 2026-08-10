@@ -26,6 +26,7 @@ export function useRoomPlayers(roomId: string | null) {
   const [loading, setLoading] = useState(true);
 
   const supabase = useMemo(() => createClient(), []);
+
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(
     null
   );
@@ -37,25 +38,21 @@ export function useRoomPlayers(roomId: string | null) {
       return;
     }
 
-    setLoading(true);
-
     const { data, error } = await supabase
       .from("players")
-      .select(
-        `
-          id,
-          room_id,
-          profile_id,
-          score,
-          has_drawn,
-          rematch_ready,
-          joined_at,
-          profiles (
-            display_name,
-            discriminator
-          )
-        `
-      )
+      .select(`
+        id,
+        room_id,
+        profile_id,
+        score,
+        has_drawn,
+        rematch_ready,
+        joined_at,
+        profiles (
+          display_name,
+          discriminator
+        )
+      `)
       .eq("room_id", roomId)
       .order("joined_at", { ascending: true });
 
@@ -66,17 +63,21 @@ export function useRoomPlayers(roomId: string | null) {
       return;
     }
 
-    const mappedPlayers: RoomPlayer[] = (data ?? []).map((player: any) => ({
-      id: player.id,
-      room_id: player.room_id,
-      profile_id: player.profile_id,
-      score: player.score ?? 0,
-      has_drawn: player.has_drawn ?? false,
-      rematch_ready: player.rematch_ready ?? false,
-      joined_at: player.joined_at,
-      display_name: player.profiles?.display_name ?? "Player",
-      discriminator: player.profiles?.discriminator ?? "0000",
-    }));
+    const mappedPlayers: RoomPlayer[] = (data ?? []).map(
+      (player: any) => ({
+        id: player.id,
+        room_id: player.room_id,
+        profile_id: player.profile_id,
+        score: player.score ?? 0,
+        has_drawn: player.has_drawn ?? false,
+        rematch_ready: player.rematch_ready ?? false,
+        joined_at: player.joined_at,
+        display_name:
+          player.profiles?.display_name ?? "Player",
+        discriminator:
+          player.profiles?.discriminator ?? "0000",
+      })
+    );
 
     setPlayers(mappedPlayers);
     setLoading(false);
@@ -92,9 +93,13 @@ export function useRoomPlayers(roomId: string | null) {
     let active = true;
 
     async function setup() {
+      setLoading(true);
+
       await fetchPlayers();
 
-      if (!active) return;
+      if (!active) {
+        return;
+      }
 
       if (channelRef.current) {
         await supabase.removeChannel(channelRef.current);
