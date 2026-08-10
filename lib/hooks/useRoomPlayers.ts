@@ -1,13 +1,22 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+} from "react";
 import { createClient } from "@/lib/supabase/client";
 
 export type RoomPlayer = {
   id: string;
+  room_id: string;
   profile_id: string;
   score: number;
   has_drawn: boolean;
+  rematch_ready: boolean;
+  joined_at: string;
   display_name: string;
   discriminator: string;
 };
@@ -15,35 +24,77 @@ export type RoomPlayer = {
 export function useRoomPlayers(roomId: string | null) {
   const [players, setPlayers] = useState<RoomPlayer[]>([]);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
-  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+
+  const supabase = useMemo(() => createClient(), []);
+  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(
+    null
+  );
 
   const fetchPlayers = useCallback(async () => {
-    if (!roomId) return;
-    const { data } = await supabase
+    if (!roomId) {
+      setPlayers([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+
+    const { data, error } = await supabase
       .from("players")
-      .select("id, profile_id, score, has_drawn, profiles(display_name, discriminator)")
+      .select(
+        `
+          id,
+          room_id,
+          profile_id,
+          score,
+          has_drawn,
+          rematch_ready,
+          joined_at,
+          profiles (
+            display_name,
+            discriminator
+          )
+        `
+      )
       .eq("room_id", roomId)
       .order("joined_at", { ascending: true });
 
-    const mapped = (data ?? []).map((p: any) => ({
-      id: p.id,
-      profile_id: p.profile_id,
-      score: p.score,
-      has_drawn: p.has_drawn,
-      display_name: p.profiles?.display_name ?? "Player",
-      discriminator: p.profiles?.discriminator ?? "0000",
+    if (error) {
+      console.error("Could not load room players:", error);
+      setPlayers([]);
+      setLoading(false);
+      return;
+    }
+
+    const mappedPlayers: RoomPlayer[] = (data ?? []).map((player: any) => ({
+      id: player.id,
+      room_id: player.room_id,
+      profile_id: player.profile_id,
+      score: player.score ?? 0,
+      has_drawn: player.has_drawn ?? false,
+      rematch_ready: player.rematch_ready ?? false,
+      joined_at: player.joined_at,
+      display_name: player.profiles?.display_name ?? "Player",
+      discriminator: player.profiles?.discriminator ?? "0000",
     }));
 
-    setPlayers(mapped);
+    setPlayers(mappedPlayers);
     setLoading(false);
   }, [roomId, supabase]);
 
   useEffect(() => {
-    if (!roomId) return;
+    if (!roomId) {
+      setPlayers([]);
+      setLoading(false);
+      return;
+    }
+
+    let active = true;
 
     async function setup() {
       await fetchPlayers();
+
+      if (!active) return;
 
       if (channelRef.current) {
         await supabase.removeChannel(channelRef.current);
@@ -54,8 +105,15 @@ export function useRoomPlayers(roomId: string | null) {
         .channel(`players-${roomId}`)
         .on(
           "postgres_changes",
-          { event: "*", schema: "public", table: "players", filter: `room_id=eq.${roomId}` },
-          () => fetchPlayers()
+          {
+            event: "*",
+            schema: "public",
+            table: "players",
+            filter: `room_id=eq.${roomId}`,
+          },
+          () => {
+            fetchPlayers();
+          }
         )
         .subscribe();
 
@@ -65,6 +123,8 @@ export function useRoomPlayers(roomId: string | null) {
     setup();
 
     return () => {
+      active = false;
+
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current);
         channelRef.current = null;
@@ -72,5 +132,8 @@ export function useRoomPlayers(roomId: string | null) {
     };
   }, [roomId, fetchPlayers, supabase]);
 
-  return { players, loading };
+  return {
+    players,
+    loading,
+  };
 }
