@@ -14,8 +14,10 @@ export type RoomStatus =
   | "choosing_word"
   | "drawing"
   | "round_end"
+  | "ended"
   | "game_end"
-  | "rematch_waiting";
+  | "rematch_waiting"
+  | "cancelled";
 
 export type Room = {
   id: string;

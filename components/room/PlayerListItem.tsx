@@ -1,4 +1,4 @@
-type AddState = "none" | "pending" | "friends" | "self";
+export type AddState = "none" | "pending" | "friends" | "self";
 
 export default function PlayerListItem({
   displayName,
