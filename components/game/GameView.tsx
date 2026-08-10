@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useProfile } from "@/lib/hooks/useProfile";
 import { useRoom } from "@/lib/hooks/useRoom";
@@ -24,6 +24,8 @@ export default function GameView({ code }: { code: string }) {
   const { players } = useRoomPlayers(room?.id ?? null);
   const { round } = useRound(room?.id ?? null);
   const supabase = createClient();
+  const [playAgainLoading, setPlayAgainLoading] = useState(false);
+const [playAgainError, setPlayAgainError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!profileLoading && !profile) router.push("/login");
@@ -64,15 +66,25 @@ export default function GameView({ code }: { code: string }) {
     );
   }
 
-  if (room.status === "game_end") {
-    return (
-      <main className="min-h-screen bg-slate-950 bg-grid flex items-center justify-center px-4">
-        <div className="w-full max-w-md rounded-xl border border-white/10 bg-white/5 p-8">
-          <GameEndPanel players={players} hostId={room.host_id} />
-        </div>
-      </main>
-    );
-  }
+if (room.status === "game_end") {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-slate-950 bg-grid px-4">
+      <div className="w-full max-w-md rounded-xl border border-white/10 bg-white/5 p-8">
+        <GameEndPanel
+          onPlayAgain={handlePlayAgain}
+          onLeave={() => router.push("/lobby")}
+          loading={playAgainLoading}
+        />
+
+        {playAgainError && (
+          <p className="mt-4 text-center text-sm text-red-400">
+            {playAgainError}
+          </p>
+        )}
+      </div>
+    </main>
+  );
+}
 
   if (!round) {
     return (
@@ -85,7 +97,25 @@ export default function GameView({ code }: { code: string }) {
   const myPlayer = players.find((p) => p.profile_id === profile.id);
   const isDrawer = round.drawer_id === myPlayer?.id;
   const isHost = profile.id === room.host_id;
+async function handlePlayAgain() {
+  if (!room) return;
 
+  setPlayAgainLoading(true);
+  setPlayAgainError(null);
+
+  const { error } = await supabase.rpc("play_again", {
+    p_room_id: room.id,
+  });
+
+  if (error) {
+    setPlayAgainError(error.message);
+    setPlayAgainLoading(false);
+    return;
+  }
+
+  router.push(`/room/${room.code}`);
+  router.refresh();
+}
   return (
     <main className="min-h-screen bg-slate-950 bg-grid px-4 py-6">
       <div className="max-w-4xl mx-auto space-y-4">
