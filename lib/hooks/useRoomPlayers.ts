@@ -54,6 +54,7 @@ export function useRoomPlayers(roomId: string | null) {
         )
       `)
       .eq("room_id", roomId)
+      .is("left_at", null)
       .order("joined_at", { ascending: true });
 
     if (error) {

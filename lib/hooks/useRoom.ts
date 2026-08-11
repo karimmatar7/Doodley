@@ -17,7 +17,9 @@ export type RoomStatus =
   | "ended"
   | "game_end"
   | "rematch_waiting"
-  | "cancelled";
+  | "cancelled"
+   | "host_left"
+  | "solo_ended";
 
 export type Room = {
   id: string;

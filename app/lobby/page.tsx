@@ -136,18 +136,22 @@ export default function LobbyEntryPage() {
       return;
     }
 
-    const { error: playerError } =
-      await supabase
-        .from("players")
-        .upsert(
-          {
-            room_id: room.id,
-            profile_id: profile.id,
-          },
-          {
-            onConflict: "room_id,profile_id",
-          }
-        );
+   const { error: playerError } =
+  await supabase
+    .from("players")
+    .upsert(
+      {
+        room_id: room.id,
+        profile_id: profile.id,
+        left_at: null,
+        has_drawn: false,
+        score: 0,
+        rematch_ready: false,
+      },
+      {
+        onConflict: "room_id,profile_id",
+      }
+    );
 
     if (playerError) {
       setError(playerError.message);

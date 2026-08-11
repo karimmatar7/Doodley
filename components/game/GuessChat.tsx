@@ -3,15 +3,22 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useGuesses } from "@/lib/hooks/useGuesses";
+import { useRoomEvents } from "@/lib/hooks/useRoomEvents";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 
+type FeedItem =
+  | { kind: "guess"; key: string; timestamp: string; guessId: number }
+  | { kind: "event"; key: string; timestamp: string; eventId: number; message: string };
+
 export default function GuessChat({
+  roomId,
   roundId,
   playerId,
   isDrawer,
   players,
 }: {
+  roomId: string;
   roundId: string;
   playerId: string;
   isDrawer: boolean;
@@ -20,6 +27,7 @@ export default function GuessChat({
   const [text, setText] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const { guesses } = useGuesses(roundId);
+  const { events } = useRoomEvents(roomId);
   const supabase = createClient();
 
   function nameFor(profileId: string) {
@@ -36,21 +44,52 @@ export default function GuessChat({
     setSubmitting(false);
   }
 
+  const feed: FeedItem[] = [
+    ...guesses.map((g) => ({
+      kind: "guess" as const,
+      key: `guess-${g.id}`,
+      timestamp: g.guessed_at,
+      guessId: g.id,
+    })),
+    ...events.map((e) => ({
+      kind: "event" as const,
+      key: `event-${e.id}`,
+      timestamp: e.created_at,
+      eventId: e.id,
+      message: e.message,
+    })),
+  ].sort(
+    (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+  );
+
   return (
     <div className="flex flex-col h-80 rounded-lg border border-white/10 bg-white/5 p-3">
       <div className="flex-1 overflow-y-auto space-y-1 mb-2">
-        {guesses.map((g) => (
-          <p key={g.id} className="text-sm">
-            {g.is_correct ? (
-              <span className="text-emerald-400 font-semibold">🎉 {nameFor(g.player_id)} guessed the word!</span>
-            ) : (
-              <>
-                <span className="font-semibold text-white">{nameFor(g.player_id)}: </span>
-                <span className="text-slate-400">{g.text}</span>
-              </>
-            )}
-          </p>
-        ))}
+        {feed.map((item) => {
+          if (item.kind === "event") {
+            return (
+              <p key={item.key} className="text-sm text-red-400 italic">
+                {item.message}
+              </p>
+            );
+          }
+
+          const g = guesses.find((guess) => guess.id === item.guessId);
+          if (!g) return null;
+
+          return (
+            <p key={item.key} className="text-sm">
+              {g.is_correct ? (
+                <span className="text-emerald-400 font-semibold">🎉 {nameFor(g.player_id)} guessed the word!</span>
+              ) : (
+                <>
+                  <span className="font-semibold text-white">{nameFor(g.player_id)}: </span>
+                  <span className="text-slate-400">{g.text}</span>
+                </>
+              )}
+            </p>
+          );
+        })}
       </div>
 
       {isDrawer ? (

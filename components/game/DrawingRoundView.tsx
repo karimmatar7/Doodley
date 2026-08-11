@@ -3,6 +3,7 @@ import GuessChat from "@/components/game/GuessChat";
 import PlayerListItem from "@/components/room/PlayerListItem";
 
 type DrawingRoundViewProps = {
+  roomId: string;
   roundId: string;
   playerId: string;
   isDrawer: boolean;
@@ -17,6 +18,7 @@ type DrawingRoundViewProps = {
 };
 
 export default function DrawingRoundView({
+  roomId,
   roundId,
   playerId,
   isDrawer,
@@ -34,6 +36,7 @@ export default function DrawingRoundView({
 
       <div className="space-y-3">
         <GuessChat
+          roomId={roomId}
           roundId={roundId}
           playerId={playerId}
           isDrawer={isDrawer}

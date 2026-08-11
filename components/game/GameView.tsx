@@ -19,6 +19,10 @@ import RematchScreen from "@/components/game/RematchScreen";
 import DrawingRoundView from "@/components/game/DrawingRoundView";
 import DoodleyLogo from "@/components/DoodleyLogo";
 import RoomCodeBadge from "@/components/room/RoomCodeBadge";
+import ThemeChoicePanel from "@/components/game/ThemeChoicePanel";
+
+import LeaveGameButton from "@/components/game/LeaveGameButton";
+import RoomEndedScreen from "@/components/game/RoomEndedScreen";
 
 import WordChoicePanel from "@/components/game/WordChoicePanel";
 import RoundTimer from "@/components/game/RoundTimer";
@@ -178,6 +182,44 @@ export default function GameView({
     router.refresh();
   }
 
+  async function handleRestartAfterHostLeft() {
+    if (!room) return;
+
+    setPlayAgainLoading(true);
+    setPlayAgainError(null);
+
+    const { error } = await supabase.rpc("restart_after_host_left", {
+      p_room_id: room.id,
+    });
+
+    if (error) {
+      setPlayAgainError(error.message);
+      setPlayAgainLoading(false);
+      return;
+    }
+
+    setPlayAgainLoading(false);
+  }
+
+  async function handleRestartSoloRoom() {
+    if (!room) return;
+
+    setPlayAgainLoading(true);
+    setPlayAgainError(null);
+
+    const { error } = await supabase.rpc("restart_solo_room", {
+      p_room_id: room.id,
+    });
+
+    if (error) {
+      setPlayAgainError(error.message);
+      setPlayAgainLoading(false);
+      return;
+    }
+
+    setPlayAgainLoading(false);
+  }
+
   async function handleLeave() {
     if (room) {
       const { error } = await supabase.rpc("leave_room", {
@@ -190,6 +232,10 @@ export default function GameView({
     }
 
     router.replace("/lobby");
+  }
+
+  async function handleLeaveGame() {
+    await handleLeave();
   }
 
   if (
@@ -228,6 +274,34 @@ export default function GameView({
   const isRematchScreen =
     room.status === "game_end" ||
     room.status === "rematch_waiting";
+
+if (room.status === "host_left") {
+  return (
+    <RoomEndedScreen
+      variant="host_left"
+      canRestart={!!myPlayer}
+      hasAgreedToRestart={myPlayer?.rematch_ready === true}
+      restartLoading={playAgainLoading}
+      restartError={playAgainError}
+      onRestart={handleRestartAfterHostLeft}
+      onGoHome={() => router.replace("/lobby")}
+    />
+  );
+}
+
+if (room.status === "solo_ended") {
+  return (
+    <RoomEndedScreen
+      variant="solo_ended"
+      canRestart={!!myPlayer}
+      hasAgreedToRestart={false}
+      restartLoading={playAgainLoading}
+      restartError={playAgainError}
+      onRestart={handleRestartSoloRoom}
+      onGoHome={() => router.replace("/lobby")}
+    />
+  );
+}
 
   if (isHost && isRematchScreen && !hasOtherPlayers) {
     return (
@@ -274,21 +348,21 @@ export default function GameView({
       <div className="mx-auto max-w-4xl space-y-4">
         <div className="flex items-center justify-between">
           <DoodleyLogo size="text-2xl" />
-
-          <RoomCodeBadge code={room.code} />
-
-          {round.status === "drawing" && (
-            <RoundTimer endsAt={round.ends_at} />
-          )}
+          {round.status === "drawing" && <RoundTimer endsAt={round.ends_at} />}
+          <LeaveGameButton onConfirmLeave={handleLeaveGame} />
         </div>
 
         {round.status === "choosing_word" && (
           <div className="rounded-xl border border-white/10 bg-white/5 p-8">
             {isDrawer ? (
-              <WordChoicePanel
-                roundId={round.id}
-                choices={round.word_choices ?? []}
-              />
+              (round.word_choices ?? []).length === 0 ? (
+                <ThemeChoicePanel roundId={round.id} />
+              ) : (
+                <WordChoicePanel
+                  roundId={round.id}
+                  choices={round.word_choices ?? []}
+                />
+              )
             ) : (
               <p className="text-center text-sm text-slate-400">
                 Waiting for the drawer to pick a word...
@@ -299,6 +373,7 @@ export default function GameView({
 
         {round.status === "drawing" && myPlayer && (
           <DrawingRoundView
+              roomId={room.id}
             roundId={round.id}
             playerId={myPlayer.id}
             isDrawer={isDrawer}

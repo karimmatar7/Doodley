@@ -9,6 +9,7 @@ export type Guess = {
   text: string;
   is_correct: boolean;
   points_awarded: number;
+  guessed_at: string;
 };
 
 export function useGuesses(roundId: string | null) {
@@ -20,7 +21,7 @@ export function useGuesses(roundId: string | null) {
     if (!roundId) return;
     const { data } = await supabase
       .from("guesses")
-      .select("id, player_id, text, is_correct, points_awarded")
+      .select("id, player_id, text, is_correct, points_awarded, guessed_at")
       .eq("round_id", roundId)
       .order("guessed_at", { ascending: true });
     setGuesses(data ?? []);
