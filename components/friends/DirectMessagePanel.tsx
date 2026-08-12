@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDirectMessages } from "@/lib/hooks/useDirectMessages";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
@@ -20,6 +20,14 @@ export default function DirectMessagePanel({
 }) {
   const { messages, sendMessage } = useDirectMessages(myProfileId, otherProfileId);
   const [text, setText] = useState("");
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => {
+      bottomRef.current?.scrollIntoView({ block: "end" });
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [messages]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -55,6 +63,7 @@ export default function DirectMessagePanel({
               </span>
             </p>
           ))}
+          <div ref={bottomRef} />
         </div>
 
         <form onSubmit={handleSubmit} className="flex gap-2">
