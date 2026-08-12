@@ -27,6 +27,7 @@ import RoomEndedScreen from "@/components/game/RoomEndedScreen";
 import WordChoicePanel from "@/components/game/WordChoicePanel";
 import RoundTimer from "@/components/game/RoundTimer";
 import RoundEndPanel from "@/components/game/RoundEndPanel";
+import RoundThemeBadge from "@/components/game/RoundThemeBadge";
 
 export default function GameView({
   code,
@@ -370,17 +371,19 @@ if (room.status === "solo_ended") {
             )}
           </div>
         )}
-
-        {round.status === "drawing" && myPlayer && (
-          <DrawingRoundView
-              roomId={room.id}
-            roundId={round.id}
-            playerId={myPlayer.id}
-            isDrawer={isDrawer}
-            players={players}
-            hostId={room.host_id}
-          />
-        )}
+{round.status === "drawing" && myPlayer && (
+  <>
+    <RoundThemeBadge theme={round.theme} />
+    <DrawingRoundView
+      roomId={room.id}
+      roundId={round.id}
+      playerId={myPlayer.id}
+      isDrawer={isDrawer}
+      players={players}
+      hostId={room.host_id}
+    />
+  </>
+)}
 
         {round.status === "ended" && (
           <div className="mx-auto max-w-md rounded-xl border border-white/10 bg-white/5 p-8">

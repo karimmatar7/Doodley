@@ -10,6 +10,7 @@ export type Round = {
   drawer_id: string;
   word: string | null;
   word_choices: string[] | null;
+  theme: string | null;
   started_at: string | null;
   ends_at: string | null;
   status: "choosing_word" | "drawing" | "ended";

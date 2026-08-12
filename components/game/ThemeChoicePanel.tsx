@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Button from "@/components/ui/Button";
+import WordChoicePanel from "@/components/game/WordChoicePanel";
+import { formatThemeLabel } from "@/lib/constants/themeLabels";
 
 type ThemeChoicePanelProps = {
   roundId: string;
@@ -13,19 +15,6 @@ type Theme = {
   word_count: number;
 };
 
-const THEME_LABELS: Record<string, string> = {
-  countries: "Countries",
-  landmarks: "Tourist attractions",
-  animals: "Animals",
-  household: "House belongings",
-  food: "Food",
-  buildings: "Buildings",
-};
-
-function formatThemeLabel(theme: string) {
-  return THEME_LABELS[theme] ?? theme.replace(/_/g, " ");
-}
-
 export default function ThemeChoicePanel({
   roundId,
 }: ThemeChoicePanelProps) {
@@ -33,6 +22,7 @@ export default function ThemeChoicePanel({
   const [loading, setLoading] = useState(true);
   const [choosing, setChoosing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [customMode, setCustomMode] = useState(false);
 
   const supabase = createClient();
 
@@ -82,6 +72,10 @@ export default function ThemeChoicePanel({
     }
   }
 
+  if (customMode) {
+    return <WordChoicePanel roundId={roundId} choices={[]} />;
+  }
+
   return (
     <div className="w-full space-y-4 text-center">
       <p className="font-medium text-slate-400">
@@ -108,6 +102,15 @@ export default function ThemeChoicePanel({
             {formatThemeLabel(theme.theme)}
           </Button>
         ))}
+
+        <Button
+          type="button"
+          variant="secondary"
+          disabled={choosing}
+          onClick={() => setCustomMode(true)}
+        >
+          Other
+        </Button>
       </div>
 
       {error && (
