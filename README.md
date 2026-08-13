@@ -5,13 +5,14 @@ A real-time multiplayer drawing-and-guessing game, built for the browser. One pl
 Live demo: [Doodley](https://doodley-eight.vercel.app/)
 ## What it does
 
-- **Rooms**: create a room and get a shareable 5-character code, or join one with a code.
-- **Rounds**: each round, the drawer is offered a choice of words, picks one, and draws it live while everyone else watches the strokes appear in real time.
-- **Guessing**: non-drawers guess in a live chat panel. Correct guesses are flagged instantly and scored based on how quickly they were submitted, so early correct guesses are worth more than late ones.
+- **Rooms**: create a room and get a shareable 5-character code, join one by typing a code, or scan a QR code to hop in instantly. Hosts can also cancel a lobby before the game starts.
+- **Rounds**: each round, the drawer is offered a choice of words across themed categories (animals, food, countries, landmarks, and more), picks one, and draws it live while everyone else watches the strokes appear in real time.
+- **Guessing chat**: non-drawers guess in a live chat panel. Correct guesses are flagged instantly and scored based on how quickly they were submitted, so early correct guesses are worth more than late ones.
 - **Rotation**: every player in the room draws exactly once before the game ends, so turns are always fair regardless of room size.
-- **Leaderboard**: once every player has drawn, a final standings screen shows the winner and full scores.
-- **Accounts**: email/password sign-up and login, a full forgot-password flow, or a one-tap guest login for anyone who doesn't want to register.
-- **Friends**: send, accept, decline friend requests, message friends directly, and unfriend them, which removes the connection for both sides at once.
+- **Leaderboard**: once every player has drawn, a final standings screen shows the winner and full scores, and anyone can ready up for a rematch with the same room.
+- **Accounts**: email/password sign-up and login, a full forgot-password flow (an emailed reset link lands on the reset-password page), or a one-tap guest login for anyone who doesn't want to register.
+- **Settings**: a dedicated page for changing your display name or your password, with your current password verified before a new one is accepted.
+- **Friends**: send, accept, decline friend requests, chat with friends directly, and unfriend them, which removes the connection for both sides at once.
 - **Persistent sessions**: closing the browser and coming back later drops you straight into the lobby if you're already logged in, guest sessions included.
 
 ## Why this stack
@@ -39,20 +40,23 @@ app/
   lobby/                create or join a room, friends drawer, logout
   room/[code]/          pre-game lobby with player list, host starts the game
   game/[code]/          live gameplay: word choice, drawing, round end, game end
+  settings/             change display name or password
 
 components/
   auth/                 AuthCard shell, GuestLoginButton
   friends/              requests, friend list, DM panel, the friends drawer
-  game/                 drawing canvas, round timer, word choice, guess chat, round and game end panels
-  room/                 room code badge, player list row
-  ui/                   shared primitives: Button, Input, ConfirmModal, ErrorMessage, PasswordHint
+  game/                 drawing canvas, round timer, word/theme choice, guess chat, round, game end and rematch screens
+  room/                 room code badge, invite link, QR scanner, player list
+  settings/             collapsible settings sections
+  ui/                   shared primitives: Button, Input, ConfirmModal, ErrorMessage, PasswordHint, Modal, PasswordInput
 
 lib/
-  hooks/                useProfile, useRoom, useRoomPlayers, useRound, useGuesses, useFriends, useDirectMessages
+  hooks/                useProfile, useRoom, useRoomPlayers, useRoomEvents, useRound, useGuesses, useDrawChannel, useFriends, useDirectMessages
   supabase/             client.ts for the browser, server.ts for server components, middleware.ts for the session refresh helper
   game/                 scoring logic
-  utils/                room code generation, time formatting
+  utils/                room code generation and QR parsing, time formatting
   validation/           password rules
+  constants/            word-theme labels
 ```
 
 The rough game flow: creating or joining a room writes to the rooms and players tables. The host triggers a start_game RPC. Each round the drawer gets word choices, picks one, and drawing strokes plus guesses stream through Realtime-subscribed tables. A round timer calls end_round when time is up. Once every player has drawn, the room status flips to game_end and the final scores render.
