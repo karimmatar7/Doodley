@@ -70,13 +70,6 @@ The brief asked for the core drawing, guessing, and scoring loop. Two things wer
 
 Neither was strictly required, but both felt like the difference between building a game and building a game people would actually keep using with the same group.
 
-## Known limitations and next steps
-
-- Round-rotation fairness (everyone draws exactly once) is implemented via the start_game and end_round RPCs rather than client logic, which is the right call for correctness, but hasn't been stress-tested with larger player counts (6 or more).
-- No reconnection handling if a player's connection drops mid-round. They would need to manually reload.
-- No profanity or word-list moderation on rounds. Words currently come from a fixed server-side list.
-- Test coverage is strong on logic and shared UI primitives, lighter on the game-flow screens themselves (DrawingCanvas, GameView), which are harder to unit test meaningfully and would benefit more from end-to-end tests (for example Playwright) than additional Jest specs.
-
 ## Running it locally
 
 ```bash
