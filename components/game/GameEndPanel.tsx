@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/Button";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 
 type GameEndPanelProps = {
   isHost: boolean;
@@ -24,10 +25,10 @@ export default function GameEndPanel({
   error = null,
 }: GameEndPanelProps) {
   return (
-    <div className="mx-auto w-full max-w-md rounded-xl border border-white/10 bg-slate-900/90 p-6 text-center shadow-xl">
-      <h2 className="text-2xl font-bold text-white">Game over!</h2>
+    <div className="w-full space-y-3 text-center">
+      <h2 className="text-2xl font-bold text-ink">Game over!</h2>
 
-      <p className="mt-2 text-sm text-slate-400">
+      <p className="font-hand text-sm text-ink-soft">
         {isHost
           ? allPlayersReady
             ? "Everyone is ready. Start the next game."
@@ -37,7 +38,7 @@ export default function GameEndPanel({
             : "Ready for another game?"}
       </p>
 
-      <div className="mt-6 space-y-3">
+      <div className="space-y-3">
         {!isHost && !myPlayerReady && (
           <Button
             type="button"
@@ -68,9 +69,7 @@ export default function GameEndPanel({
         </Button>
       </div>
 
-      {error && (
-        <p className="mt-4 text-sm text-red-400">{error}</p>
-      )}
+      <ErrorMessage message={error} />
     </div>
   );
 }

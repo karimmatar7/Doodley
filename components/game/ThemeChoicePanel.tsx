@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Button from "@/components/ui/Button";
 import WordChoicePanel from "@/components/game/WordChoicePanel";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 import { formatThemeLabel } from "@/lib/constants/themeLabels";
 
 type ThemeChoicePanelProps = {
@@ -78,16 +79,16 @@ export default function ThemeChoicePanel({
 
   return (
     <div className="w-full space-y-4 text-center">
-      <p className="font-medium text-slate-400">
+      <p className="font-hand text-ink-soft">
         Pick a theme to draw from:
       </p>
 
       {loading && (
-        <p className="text-sm text-slate-500">Loading themes...</p>
+        <p className="text-sm font-hand text-ink-soft">Loading themes...</p>
       )}
 
       {!loading && themes.length === 0 && !error && (
-        <p className="text-sm text-slate-500">No themes available.</p>
+        <p className="text-sm font-hand text-ink-soft">No themes available.</p>
       )}
 
       <div className="grid grid-cols-1 gap-2">
@@ -113,11 +114,7 @@ export default function ThemeChoicePanel({
         </Button>
       </div>
 
-      {error && (
-        <p className="text-sm text-red-400" role="alert">
-          {error}
-        </p>
-      )}
+      <ErrorMessage message={error} />
     </div>
   );
 }

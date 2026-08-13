@@ -3,6 +3,8 @@
 import { FormEvent, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Button from "@/components/ui/Button";
+import Input from "@/components/ui/Input";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 
 type WordChoicePanelProps = {
   roundId: string;
@@ -53,7 +55,7 @@ export default function WordChoicePanel({
 
   return (
     <div className="w-full space-y-4 text-center">
-      <p className="font-medium text-slate-400">
+      <p className="font-hand text-ink-soft">
         Pick a word to draw:
       </p>
 
@@ -71,37 +73,20 @@ export default function WordChoicePanel({
         ))}
       </div>
 
-      <div className="flex items-center gap-3 py-1">
-        <div className="h-px flex-1 bg-white/10" />
-        <span className="text-xs uppercase tracking-widest text-slate-500">
-          or
-        </span>
-        <div className="h-px flex-1 bg-white/10" />
-      </div>
+      <div className="divider py-1" />
 
       <form
         onSubmit={handleCustomWordSubmit}
         className="space-y-2 text-left"
       >
-        <label
-          htmlFor="custom-word"
-          className="block text-xs uppercase tracking-widest text-slate-500"
-        >
-          Type your own word
-        </label>
-
-        <input
-          id="custom-word"
-          type="text"
+        <Input
+          label="Type your own word"
           value={customWord}
-          onChange={(event) => {
-            setCustomWord(event.target.value);
+          onChange={(value) => {
+            setCustomWord(value);
             setError(null);
           }}
-          placeholder="Enter a word"
           maxLength={40}
-          disabled={loading}
-          className="w-full rounded-lg border border-white/10 bg-slate-950 px-3 py-3 text-center text-sm text-white outline-none transition-colors placeholder:text-slate-600 focus:border-brand-maroon disabled:cursor-not-allowed disabled:opacity-50"
         />
 
         <Button
@@ -114,11 +99,7 @@ export default function WordChoicePanel({
         </Button>
       </form>
 
-      {error && (
-        <p className="text-sm text-red-400" role="alert">
-          {error}
-        </p>
-      )}
+      <ErrorMessage message={error} />
     </div>
   );
 }

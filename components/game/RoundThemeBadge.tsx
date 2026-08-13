@@ -9,9 +9,9 @@ export default function RoundThemeBadge({ theme }: RoundThemeBadgeProps) {
   if (!theme) return null;
 
   return (
-    <p className="text-center text-sm text-slate-400">
+    <p className="text-center font-hand text-sm text-ink-soft">
       Theme:{" "}
-      <span className="font-semibold text-brand-green-light">
+      <span className="font-bold text-brand-green">
         {formatThemeLabel(theme)}
       </span>
     </p>

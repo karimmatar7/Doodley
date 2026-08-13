@@ -2,6 +2,8 @@
 
 import Button from "@/components/ui/Button";
 import DoodleyLogo from "@/components/DoodleyLogo";
+import GameScreen from "@/components/ui/GameScreen";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 
 type RoomEndedScreenProps = {
   variant: "host_left" | "solo_ended";
@@ -48,22 +50,19 @@ export default function RoomEndedScreen({
   const copy = COPY[variant];
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 bg-grid px-4">
-      <div className="w-full max-w-md space-y-6 rounded-xl border border-white/10 bg-white/5 p-8 text-center">
+    <GameScreen className="flex items-center justify-center">
+      <div className="sketch-card relative w-full max-w-md space-y-6 p-8 text-center">
+        <div className="tape tape-tr" />
         <DoodleyLogo size="text-2xl" />
 
-        <p className="text-sm text-slate-300">{copy.title}</p>
+        <p className="font-hand text-sm text-ink">{copy.title}</p>
 
-        {restartError && (
-          <p className="text-sm text-red-400" role="alert">
-            {restartError}
-          </p>
-        )}
+        <ErrorMessage message={restartError} />
 
         <div className="flex flex-col gap-3">
           {canRestart ? (
             hasAgreedToRestart ? (
-              <p className="text-sm text-slate-500">{copy.agreedLabel}</p>
+              <p className="text-sm font-hand text-ink-soft">{copy.agreedLabel}</p>
             ) : (
               <Button
                 type="button"
@@ -75,7 +74,7 @@ export default function RoomEndedScreen({
               </Button>
             )
           ) : (
-            <p className="text-sm text-slate-500">{copy.waitingLabel}</p>
+            <p className="text-sm font-hand text-ink-soft">{copy.waitingLabel}</p>
           )}
 
           <Button type="button" variant="secondary" onClick={onGoHome}>
@@ -83,6 +82,6 @@ export default function RoomEndedScreen({
           </Button>
         </div>
       </div>
-    </main>
+    </GameScreen>
   );
 }

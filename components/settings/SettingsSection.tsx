@@ -19,7 +19,7 @@ export default function SettingsSection({
         type="button"
         onClick={onToggle}
         aria-expanded={open}
-        className="text-sm font-medium text-emerald-400 hover:underline"
+        className="link-btn text-sm"
       >
         {open ? `Hide ${label.toLowerCase()}` : label}
       </button>

@@ -27,11 +27,7 @@ export default function Input({
 
   return (
     <label className="block w-full">
-      {!hideLabel && (
-        <span className="block text-xs font-medium uppercase tracking-wide text-slate-500 mb-1.5">
-          {label}
-        </span>
-      )}
+      {!hideLabel && <span className="label mb-1.5 block">{label}</span>}
       <input
         type={type}
         value={value}
@@ -42,10 +38,11 @@ export default function Input({
         placeholder={hideLabel ? label : undefined}
         aria-label={label}
         className={`
-          w-full bg-transparent border-0 border-b-2 border-white/15
-          text-white placeholder-slate-500 outline-none py-2
-          focus:border-white transition-colors duration-200
-          ${isCode ? "text-lg font-medium tracking-widest text-center" : "text-sm sm:text-base text-left"}
+          w-full bg-transparent ink-underline
+          text-ink placeholder-ink-soft outline-none py-2
+          ${isCode
+            ? "text-2xl sm:text-3xl font-bold tracking-widest text-center uppercase"
+            : "text-sm sm:text-base text-left font-hand"}
         `}
       />
     </label>

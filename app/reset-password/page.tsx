@@ -48,7 +48,7 @@ export default function ResetPasswordPage() {
   if (success) {
     return (
       <AuthCard subtitle="">
-        <p className="text-sm text-emerald-400 text-center">
+        <p className="text-center font-hand text-sm text-brand-green">
           Password updated! Taking you to the lobby...
         </p>
       </AuthCard>

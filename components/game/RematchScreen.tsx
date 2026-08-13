@@ -1,4 +1,5 @@
 import GameEndPanel from "@/components/game/GameEndPanel";
+import GameScreen from "@/components/ui/GameScreen";
 
 type RematchScreenProps = {
   isHost: boolean;
@@ -24,8 +25,9 @@ export default function RematchScreen({
   error,
 }: RematchScreenProps) {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 bg-grid px-4">
-      <div className="w-full max-w-md rounded-xl border border-white/10 bg-white/5 p-8">
+    <GameScreen className="flex items-center justify-center">
+      <div className="sketch-card relative w-full max-w-md p-8">
+        <div className="tape tape-tl" />
         <GameEndPanel
           isHost={isHost}
           allPlayersReady={allPlayersReady}
@@ -40,12 +42,12 @@ export default function RematchScreen({
         {allPlayersReady &&
           isRematchWaiting &&
           !isHost && (
-            <p className="mt-4 text-center text-sm text-slate-400">
+            <p className="mt-4 text-center font-hand text-sm text-ink-soft">
               Everyone is ready. Waiting for the host
               to start the game.
             </p>
           )}
       </div>
-    </main>
+    </GameScreen>
   );
 }

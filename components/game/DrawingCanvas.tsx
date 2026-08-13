@@ -11,10 +11,10 @@ const COLORS = [
   "#EAB308", // yellow
   "#EA580C", // orange
   "#9333EA", // purple
-  "#EC4899", // pink
 ];
 
 const ERASER_COLOR = "#FFFFFF";
+const ERASER_WIDTH = 24;
 
 export default function DrawingCanvas({
   roundId,
@@ -34,6 +34,7 @@ export default function DrawingCanvas({
   const [selectedColor, setSelectedColor] = useState(color);
   const [selectedLineWidth, setSelectedLineWidth] = useState(lineWidth);
   const [isEraser, setIsEraser] = useState(false);
+  const [customColor, setCustomColor] = useState("#64748B");
 
   const supabaseColor = isEraser ? ERASER_COLOR : selectedColor;
 
@@ -118,7 +119,7 @@ export default function DrawingCanvas({
       x,
       y,
       color: supabaseColor,
-      size: selectedLineWidth,
+      size: isEraser ? ERASER_WIDTH : selectedLineWidth,
       type: "start",
     };
 
@@ -145,7 +146,7 @@ export default function DrawingCanvas({
       x,
       y,
       color: supabaseColor,
-      size: selectedLineWidth,
+      size: isEraser ? ERASER_WIDTH : selectedLineWidth,
       type: "move",
     };
 
@@ -178,7 +179,7 @@ export default function DrawingCanvas({
   }
 
   return (
-    <div className="w-full space-y-3">
+    <div className="sketch-card w-full space-y-3 p-3">
       {isDrawer && (
         <div className="flex flex-wrap items-center justify-center gap-2">
           {COLORS.map((item) => (
@@ -190,22 +191,45 @@ export default function DrawingCanvas({
               onClick={() => selectColor(item)}
               className={`h-8 w-8 rounded-full border-2 transition-transform ${
                 !isEraser && selectedColor === item
-                  ? "scale-110 border-white ring-2 ring-white/40"
-                  : "border-white/20"
+                  ? "scale-110 border-ink ring-2 ring-brand-maroon"
+                  : "border-ink/30"
               }`}
               style={{ backgroundColor: item }}
             />
           ))}
+
+          <label
+            title="Pick a custom color"
+            className={`relative h-8 w-8 cursor-pointer border-2 border-ink/30 transition-transform ${
+              !isEraser && selectedColor === customColor ? "scale-110" : ""
+            }`}
+            style={{
+              background:
+                "conic-gradient(#f43f5e, #f59e0b, #facc15, #22c55e, #06b6d4, #6366f1, #a855f7, #f43f5e)",
+              borderRadius: "9999px",
+            }}
+          >
+            <input
+              type="color"
+              value={customColor}
+              onChange={(event) => {
+                setCustomColor(event.target.value);
+                selectColor(event.target.value);
+              }}
+              aria-label="Pick a custom color"
+              className="absolute inset-0 h-full w-full cursor-pointer touch-manipulation rounded-full opacity-0"
+            />
+          </label>
 
           <button
             type="button"
             onClick={() => setIsEraser(true)}
             aria-label="Use eraser"
             aria-pressed={isEraser}
-            className={`flex h-8 items-center gap-1 rounded-md border px-3 text-xs font-medium transition-colors ${
+            className={`chip-btn flex h-8 items-center gap-1 px-3 text-xs font-bold ${
               isEraser
-                ? "border-white bg-white text-slate-900"
-                : "border-white/15 bg-white/5 text-slate-300 hover:bg-white/10"
+                ? "bg-paper-dark text-ink"
+                : "bg-paper-light text-ink-soft hover:bg-paper-dark"
             }`}
           >
             <span aria-hidden="true">⌫</span>
@@ -218,7 +242,7 @@ export default function DrawingCanvas({
               setSelectedLineWidth(Number(event.target.value))
             }
             aria-label="Brush size"
-            className="h-8 rounded-md border border-white/15 bg-slate-900 px-2 text-xs text-slate-200 outline-none"
+            className="h-8 cursor-pointer border-2 border-ink bg-paper-light px-3 text-xs font-bold text-ink outline-none transition-colors hover:bg-paper-dark focus:border-brand-maroon"
           >
             <option value={2}>Thin</option>
             <option value={4}>Medium</option>
@@ -241,7 +265,7 @@ export default function DrawingCanvas({
             stopDrawing(event);
           }
         }}
-        className={`block w-full rounded-lg border-2 border-brand-blue-dark bg-brand-white ${
+        className={`block w-full border-2 border-ink/60 bg-white ${
           isDrawer
             ? "cursor-crosshair touch-none select-none"
             : "cursor-default"

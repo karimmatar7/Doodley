@@ -34,40 +34,38 @@ export default function RoomInvite({
   }
 
   return (
-    <section className="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900/60 p-4 shadow-lg sm:p-5">
-      <p className="text-center text-xs font-medium uppercase tracking-[0.16em] text-slate-400">
-        Invite friends
-      </p>
+    <section className="sketch-card relative w-full max-w-sm p-4 sm:p-5">
+      <div className="tape tape-tl" />
+      <p className="label text-center">Invite friends</p>
 
       <div className="mt-4 flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center sm:gap-5">
         <button
           type="button"
           onClick={handleCopy}
           aria-label={`Copy room code ${code}`}
-          className="flex min-w-[132px] flex-col items-center justify-center rounded-xl border border-white/15 bg-white/5 px-4 py-3 transition-colors hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30"
+          className="flex min-w-[132px] flex-col items-center justify-center border-2 border-ink/25 bg-paper-dark px-4 py-3 transition-colors hover:bg-brand-blue-light focus:outline-none"
+          style={{ borderRadius: "16px 20px 14px 18px" }}
         >
-          <span className="text-[10px] uppercase tracking-[0.16em] text-slate-500">
-            Room code
-          </span>
+          <span className="label text-[10px] tracking-[0.16em]">Room code</span>
 
-          <span className="mt-1 font-mono text-xl font-bold tracking-[0.2em] text-white">
+          <span className="mt-1 text-xl font-bold tracking-[0.2em] text-brand-maroon">
             {code}
           </span>
 
-          <span className="mt-1 text-[10px] uppercase tracking-wide text-slate-400">
+          <span className="mt-1 text-[10px] uppercase tracking-wide text-ink-soft">
             {copied ? "Copied!" : "Copy"}
           </span>
         </button>
 
-        <div className="hidden h-20 w-px bg-white/10 sm:block" />
+        <div className="hidden h-20 w-0.5 bg-ink/15 sm:block" />
 
         <div className="flex shrink-0 flex-col items-center">
-          <div className="rounded-xl bg-white p-2.5 shadow-md">
+          <div className="border-2 border-ink/20 bg-white p-2.5" style={{ borderRadius: "12px 16px 10px 14px" }}>
             <QRCodeSVG
               value={joinUrl}
               size={128}
               bgColor="#ffffff"
-              fgColor="#0f172a"
+              fgColor="#262220"
               level="M"
               includeMargin
               role="img"
@@ -76,7 +74,7 @@ export default function RoomInvite({
             />
           </div>
 
-          <span className="mt-2 text-center text-[10px] text-slate-500">
+          <span className="mt-2 text-center text-[10px] text-ink-soft">
             Scan to join
           </span>
         </div>

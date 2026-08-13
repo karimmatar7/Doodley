@@ -30,8 +30,9 @@ export default function RoundEndPanel({
 
   return (
     <div className="space-y-4 text-center">
-      <p className="text-gray-700">
-        The word was: <span className="font-bold text-brand-maroon">{word}</span>
+      <p className="font-hand text-ink">
+        The word was:{" "}
+        <span className="font-bold text-brand-maroon">{word}</span>
       </p>
       <div className="space-y-2">
         {sorted.map((p) => (
@@ -43,7 +44,7 @@ export default function RoundEndPanel({
           {loading ? "Loading..." : "Next round"}
         </Button>
       ) : (
-        <p className="text-sm text-gray-500">Waiting for the host to continue...</p>
+        <p className="text-sm font-hand text-ink-soft">Waiting for the host to continue...</p>
       )}
     </div>
   );

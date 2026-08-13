@@ -56,8 +56,10 @@ export default function SignupPage() {
   if (success) {
     return (
       <AuthCard subtitle="">
-        <h2 className="text-xl font-bold text-emerald-400 mb-2 text-center">Almost there!</h2>
-        <p className="text-slate-400 text-sm text-center">
+        <h2 className="mb-2 text-center text-xl font-bold text-brand-green">
+          Almost there!
+        </h2>
+        <p className="text-center font-hand text-sm text-ink-soft">
           Check your inbox and confirm your email address to log in.
         </p>
       </AuthCard>
@@ -77,17 +79,13 @@ export default function SignupPage() {
         </Button>
       </form>
 
-      <div className="flex items-center gap-3 my-4">
-        <div className="flex-1 h-px bg-white/10" />
-        <span className="text-xs uppercase tracking-widest text-slate-500">or</span>
-        <div className="flex-1 h-px bg-white/10" />
-      </div>
+      <div className="divider my-4" />
 
       <GuestLoginButton />
 
-      <p className="text-sm text-slate-500 mt-4 text-center">
+      <p className="mt-4 text-center font-hand text-sm text-ink-soft">
         Already have an account?{" "}
-        <a href="/login" className="text-brand-maroon font-medium hover:underline">
+        <a href="/login" className="link-btn text-sm">
           Log in here
         </a>
       </p>

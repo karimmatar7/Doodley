@@ -47,11 +47,11 @@ export default function TopBar({
         <button
           type="button"
           onClick={() => setProfileOpen((value) => !value)}
-          className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-colors hover:bg-white/10"
+          className="chip-btn flex h-11 w-11 items-center justify-center bg-paper-light text-ink hover:bg-paper-dark"
           aria-label="Profile"
           aria-expanded={profileOpen}
         >
-          <span className="text-sm font-semibold text-slate-200">
+          <span className="text-sm font-bold text-brand-maroon">
             {profile?.display_name?.charAt(0).toUpperCase() ?? "?"}
           </span>
         </button>
@@ -71,12 +71,12 @@ export default function TopBar({
           <button
             type="button"
             onClick={() => setFriendsOpen((value) => !value)}
-            className="relative flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-colors hover:bg-white/10"
+            className="chip-btn relative flex h-11 w-11 items-center justify-center bg-paper-light text-ink hover:bg-paper-dark"
             aria-label="Friends"
             aria-expanded={friendsOpen}
           >
             <svg
-              className="h-5 w-5 text-slate-300"
+              className="h-5 w-5 text-brand-maroon"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -91,7 +91,7 @@ export default function TopBar({
             </svg>
 
             {incoming.length > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-maroon text-[10px] font-bold text-white">
+              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-maroon text-[10px] font-bold text-cream">
                 {incoming.length}
               </span>
             )}
@@ -115,7 +115,7 @@ export default function TopBar({
         <button
           type="button"
           onClick={handleLogout}
-          className="flex h-11 items-center rounded-full border border-white/10 bg-white/5 px-4 text-sm font-medium text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+          className="chip-btn flex h-11 items-center bg-paper-light px-4 text-sm font-bold text-ink hover:bg-paper-dark"
         >
           Log out
         </button>

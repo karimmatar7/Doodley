@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/Button";
+import Modal from "@/components/ui/Modal";
 
 export default function ConfirmModal({
   title,
@@ -18,19 +19,17 @@ export default function ConfirmModal({
   onCancel: () => void;
 }) {
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center px-4 z-50">
-      <div className="w-full max-w-sm rounded-xl border border-white/10 bg-slate-900 shadow-2xl p-6 space-y-4">
-        <h2 className="text-lg font-bold text-white">{title}</h2>
-        <p className="text-sm text-slate-400">{message}</p>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={onCancel}>
-            {cancelLabel}
-          </Button>
-          <Button variant="primary" onClick={onConfirm}>
-            {confirmLabel}
-          </Button>
-        </div>
+    <Modal onClose={onCancel} ariaLabel={title} className="max-w-sm space-y-4">
+      <h2 className="text-lg font-bold text-ink">{title}</h2>
+      <p className="font-hand text-sm text-ink-soft">{message}</p>
+      <div className="flex gap-2">
+        <Button variant="outline" onClick={onCancel}>
+          {cancelLabel}
+        </Button>
+        <Button variant="primary" onClick={onConfirm}>
+          {confirmLabel}
+        </Button>
       </div>
-    </div>
+    </Modal>
   );
 }

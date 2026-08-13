@@ -43,7 +43,7 @@ export default function DrawingRoundView({
           players={players}
         />
 
-        <div className="space-y-1">
+        <div className="sketch-card space-y-1 p-3">
           {players
             .slice()
             .sort((a, b) => b.score - a.score)

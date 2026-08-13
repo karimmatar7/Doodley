@@ -16,19 +16,19 @@ export default function PlayerListItem({
   score?: number;
 }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-2.5">
-      <p className="text-sm">
-        <span className="font-semibold text-white">{displayName}</span>
-        <span className="text-slate-500">#{discriminator}</span>
+    <div className="flex items-center justify-between border-2 border-ink/20 bg-paper-dark px-4 py-2.5">
+      <p className="font-hand text-sm">
+        <span className="font-bold text-ink">{displayName}</span>
+        <span className="text-ink-soft">#{discriminator}</span>
       </p>
 
       <div className="flex items-center gap-2">
         {typeof score === "number" && (
-          <span className="text-sm font-semibold text-emerald-400">{score} pts</span>
+          <span className="text-sm font-bold text-brand-green">{score} pts</span>
         )}
 
         {isHost && (
-          <span className="rounded-full bg-brand-maroon px-2.5 py-0.5 text-xs font-medium text-white">
+          <span className="border-2 border-ink/40 bg-brand-maroon px-2.5 py-0.5 text-xs font-bold text-cream">
             Host
           </span>
         )}
@@ -36,14 +36,14 @@ export default function PlayerListItem({
         {addState === "none" && onAdd && (
           <button
             onClick={onAdd}
-            className="rounded-full border border-white/15 px-3 py-1 text-xs text-slate-300 hover:bg-white/10 transition-colors"
+            className="chip-btn bg-paper-light px-3 py-1 text-xs font-bold text-ink hover:bg-brand-blue-light"
           >
             + Add
           </button>
         )}
 
-        {addState === "pending" && <span className="text-xs text-slate-500">Pending</span>}
-        {addState === "friends" && <span className="text-xs text-emerald-500">Friends</span>}
+        {addState === "pending" && <span className="text-xs font-hand text-ink-soft">Pending</span>}
+        {addState === "friends" && <span className="text-xs font-hand font-bold text-brand-green">Friends</span>}
       </div>
     </div>
   );

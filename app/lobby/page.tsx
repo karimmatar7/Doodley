@@ -204,9 +204,7 @@ export default function LobbyEntryPage() {
   }
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center gap-6 bg-slate-950 bg-grid px-4 py-10 sm:px-6">
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950 via-transparent to-slate-950" />
-
+    <main className="relative flex min-h-screen flex-col items-center justify-center gap-6 bg-paper px-4 py-10 sm:px-6">
       <TopBar
         friends={friends}
         incoming={incoming}
@@ -227,7 +225,7 @@ export default function LobbyEntryPage() {
         <div className="flex flex-col items-center gap-2 text-center">
           <DoodleyLogo size="text-5xl sm:text-6xl" />
 
-          <p className="max-w-xs text-sm text-slate-400 sm:text-base">
+          <p className="max-w-xs text-sm font-hand text-ink-soft sm:text-base">
             Draw, guess, and score points in real time
             with friends.
           </p>
@@ -242,15 +240,7 @@ export default function LobbyEntryPage() {
             {loading ? "Loading..." : "Create a room"}
           </Button>
 
-          <div className="flex items-center gap-3 py-1">
-            <div className="h-px flex-1 bg-white/10" />
-
-            <span className="text-xs uppercase tracking-widest text-slate-500">
-              or
-            </span>
-
-            <div className="h-px flex-1 bg-white/10" />
-          </div>
+          <div className="divider py-1" />
 
           <form
             onSubmit={handleJoinRoom}
@@ -272,7 +262,7 @@ export default function LobbyEntryPage() {
                 setScannerOpen(true);
               }}
               disabled={loading || !profile}
-              className="flex min-h-11 w-full items-center justify-center rounded-lg border border-white/15 bg-white/5 px-4 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+              className="chip-btn flex min-h-11 w-full items-center justify-center bg-paper-light px-4 text-sm font-bold text-ink hover:bg-paper-dark disabled:cursor-not-allowed disabled:opacity-50"
             >
               Scan QR code
             </button>

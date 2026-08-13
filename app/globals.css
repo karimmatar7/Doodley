@@ -1,34 +1,295 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-maroon: #8E0A1E;
-  --color-brand-maroon-light: #B32438;
-  --color-brand-maroon-dark: #6B0716;
-  --color-brand-green: #2E6F40;
-  --color-brand-green-light: #4F9463;
-  --color-brand-green-dark: #1F4E2C;
-  --color-brand-blue: #ADD8E6;
-  --color-brand-blue-light: #D2ECF3;
-  --color-brand-blue-dark: #7FB8CC;
-  --color-brand-white: #FFFFFF;
+  /* Warm cream paper + ink palette */
+  --color-paper: #f4ecd8;
+  --color-paper-dark: #e7dcc0;
+  --color-paper-light: #fbf4e2;
+  --color-ink: #262220;
+  --color-ink-soft: #55504a;
+  --color-cream: #fbf6e8;
 
+  /* Brand accents — pen / marker / tape colors, not flat UI fills */
+  --color-brand-maroon: #8e0a1e;
+  --color-brand-maroon-light: #b32438;
+  --color-brand-maroon-dark: #6b0716;
+  --color-brand-green: #2e6f40;
+  --color-brand-green-light: #4f9463;
+  --color-brand-green-dark: #1f4e2c;
+  --color-brand-blue: #add8e6;
+  --color-brand-blue-light: #d2ecf3;
+  --color-brand-blue-dark: #7fb8cc;
+
+  /* Fonts — Kalam (wobbly marker) reserved for the logo, Roboto elsewhere */
+  --font-sans: var(--font-roboto), "Roboto Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-marker: var(--font-kalam), "Kalam Fallback", cursive;
+  --font-hand: var(--font-roboto), "Roboto Fallback", ui-sans-serif, system-ui, sans-serif;
+
+  /* Motion */
   --animate-pop-in: popIn 0.25s ease-out;
   --animate-pulse-timer: pulseTimer 1s ease-in-out infinite;
+  --animate-wobble: wobble 0.45s ease-in-out;
 }
 
 @keyframes popIn {
-  0% { transform: scale(0.6); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes pulseTimer {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
-.bg-grid {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 32px 32px;
+@keyframes wobble {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  20% {
+    transform: translateX(-4px) rotate(-2deg);
+  }
+  40% {
+    transform: translateX(4px) rotate(2deg);
+  }
+  60% {
+    transform: translateX(-3px) rotate(-1deg);
+  }
+  80% {
+    transform: translateX(3px) rotate(1deg);
+  }
+}
+
+@layer base {
+  /*
+   * Typography defaults: Roboto everywhere. The wobbly Kalam font is
+   * reserved exclusively for the logo. Fonts are loaded via next/font
+   * in app/layout.tsx.
+   */
+  html,
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  button {
+    font-family: var(--font-sans);
+  }
+}
+
+/*
+ * Custom classes live in the `components` layer so Tailwind utilities
+ * (position, sizing, radius, etc.) always win when combined, e.g. a
+ * `.sketch-card` that is also `fixed`/`absolute` (drawers & modals).
+ */
+@layer components {
+  /*
+   * Full-page sketchbook background: a sheet of ruled, slightly creased
+   * paper. Layered from top to bottom:
+   *   1. faint horizontal rule lines every 38px (notebook ruling)
+   *   2. broad crease highlights / shadows for a wrinkled feel
+   *   3. fine fiber grain + soft blotches from tiled SVG noise
+   */
+  .bg-paper {
+    background-color: var(--color-paper);
+    background-image:
+      repeating-linear-gradient(0deg, rgb(38 34 32 / 0.065) 0 1px, transparent 1px 38px),
+      radial-gradient(100% 35% at 18% 12%, rgb(255 255 255 / 0.07), transparent 70%),
+      radial-gradient(90% 40% at 82% 88%, rgb(38 34 32 / 0.055), transparent 70%),
+      radial-gradient(120% 55% at 50% 115%, rgb(38 34 32 / 0.04), transparent 75%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72 1.05' numOctaves='4' seed='12' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23p)' opacity='0.32'/%3E%3C/svg%3E"),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.055 0.008' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='320' height='320' filter='url(%23f)' opacity='0.12'/%3E%3C/svg%3E");
+    background-size:
+      auto,
+      100% 100%,
+      100% 100%,
+      100% 100%,
+      240px 240px,
+      640px 640px;
+    background-position:
+      0 0,
+      0 0,
+      0 0,
+      0 0,
+      0 0,
+      0 0;
+    background-repeat:
+      repeat,
+      no-repeat,
+      no-repeat,
+      no-repeat,
+      repeat,
+      repeat;
+  }
+
+  /*
+   * Sketch card: thick ink border, uneven hand-drawn corners, flat offset
+   * shadow. No isolation / pseudo-element so fixed-position overlays
+   * (modals, toasts) render above later siblings like the drawing canvas.
+   */
+  .sketch-card {
+    position: relative;
+    border: 2px solid var(--color-ink);
+    border-radius: 0;
+    background: var(--color-paper-light);
+    box-shadow: 4px 5px 0 rgb(38 34 32 / 0.6);
+  }
+
+  /*
+   * Shared button treatment: square corners, ink border, flat offset
+   * shadow. Lifts on hover, presses into the paper on click.
+   */
+  .sketch-btn {
+    border: 2px solid var(--color-ink);
+    border-radius: 0;
+    box-shadow: 3px 4px 0 rgb(38 34 32 / 0.7);
+    transition:
+      transform 0.12s ease,
+      box-shadow 0.12s ease,
+      background-color 0.12s ease,
+      color 0.12s ease;
+  }
+
+  .sketch-btn:hover:not(:disabled) {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 5px 0 rgb(38 34 32 / 0.7);
+  }
+
+  .sketch-btn:active:not(:disabled) {
+    transform: translate(2px, 3px);
+    box-shadow: 1px 1px 0 rgb(38 34 32 / 0.7);
+  }
+
+  /*
+   * Small pill buttons (icon buttons, +Add, copy...) — same idea, smaller.
+   */
+  .chip-btn {
+    border: 2px solid var(--color-ink);
+    border-radius: 0;
+    box-shadow: 1px 2px 0 rgb(38 34 32 / 0.6);
+    transition:
+      transform 0.12s ease,
+      box-shadow 0.12s ease,
+      background-color 0.12s ease,
+      color 0.12s ease;
+  }
+
+  .chip-btn:hover:not(:disabled) {
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 3px 0 rgb(38 34 32 / 0.6);
+  }
+
+  .chip-btn:active:not(:disabled) {
+    transform: translate(1px, 2px);
+    box-shadow: 0 0 0 rgb(38 34 32 / 0.6);
+  }
+
+  /*
+   * Text-only actions (forgot password, back-to-login, section toggles).
+   * Clean professional links — no scribbly underlines.
+   */
+  .link-btn {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    color: var(--color-brand-green);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .link-btn:hover {
+    color: var(--color-brand-green-dark);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /*
+   * Uppercase marker-style section label used across panels.
+   */
+  .label {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+
+  /*
+   * Clean underline for text inputs (no boxed fields). A single straight
+   * 2px line; turns maroon and thickens on focus. No layout shift.
+   */
+  .ink-underline {
+    background-image: linear-gradient(var(--color-ink-soft), var(--color-ink-soft));
+    background-size: 100% 2px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    padding-bottom: 0.35rem;
+    transition: background-size 0.15s ease;
+  }
+
+  .ink-underline:focus {
+    background-image: linear-gradient(var(--color-brand-maroon), var(--color-brand-maroon));
+    background-size: 100% 3px;
+  }
+
+  /*
+   * Plain hairline divider — a clean 1px rule, not a squiggle.
+   */
+  .divider {
+    height: 1px;
+    background: rgb(38 34 32 / 0.16);
+  }
+
+  /*
+   * Washi tape corner accents — semi-transparent blue strips, slightly
+   * rotated, like tape holding a page down.
+   */
+  .tape {
+    position: absolute;
+    z-index: 10;
+    width: 88px;
+    height: 28px;
+    background: rgb(173 216 230 / 0.6);
+    border-left: 1px dashed rgb(38 34 32 / 0.25);
+    border-right: 1px dashed rgb(38 34 32 / 0.25);
+    box-shadow: 0 2px 3px rgb(38 34 32 / 0.18);
+    pointer-events: none;
+  }
+
+  .tape-tr {
+    top: -12px;
+    right: -10px;
+    transform: rotate(6deg);
+  }
+
+  .tape-tl {
+    top: -12px;
+    left: -10px;
+    transform: rotate(-6deg);
+  }
+
+  .tape-br {
+    bottom: -12px;
+    right: -10px;
+    transform: rotate(-5deg);
+  }
+
+  .tape-bl {
+    bottom: -12px;
+    left: -10px;
+    transform: rotate(5deg);
+  }
 }

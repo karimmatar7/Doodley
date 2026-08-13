@@ -64,15 +64,16 @@ export default function LoginPage() {
       <AuthCard subtitle="Reset your password.">
         {resetSent ? (
           <div className="space-y-3 text-center">
-            <p className="text-sm text-emerald-400">
+            <p className="text-sm font-hand text-brand-green">
               Check your inbox for a link to reset your password.
             </p>
             <button
+              type="button"
               onClick={() => {
                 setShowForgot(false);
                 setResetSent(false);
               }}
-              className="text-sm text-slate-400 hover:text-white transition-colors"
+              className="link-btn text-sm"
             >
               Back to log in
             </button>
@@ -87,7 +88,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setShowForgot(false)}
-              className="w-full text-sm text-slate-400 hover:text-white transition-colors text-center"
+              className="link-btn w-full text-center text-sm"
             >
               Back to log in
             </button>
@@ -103,11 +104,11 @@ export default function LoginPage() {
         <Input label="Email" type="email" required value={email} onChange={setEmail} />
         <Input label="Password" type="password" required value={password} onChange={setPassword} />
 
-        <div className="flex justify-end -mt-1">
+        <div className="-mt-1 flex justify-end">
           <button
             type="button"
             onClick={() => setShowForgot(true)}
-            className="text-xs text-slate-500 hover:text-white transition-colors"
+            className="link-btn text-xs"
           >
             Forgot password?
           </button>
@@ -119,17 +120,13 @@ export default function LoginPage() {
         </Button>
       </form>
 
-      <div className="flex items-center gap-3 my-4">
-        <div className="flex-1 h-px bg-white/10" />
-        <span className="text-xs uppercase tracking-widest text-slate-500">or</span>
-        <div className="flex-1 h-px bg-white/10" />
-      </div>
+      <div className="divider my-4" />
 
       <GuestLoginButton />
 
-      <p className="text-sm text-slate-500 mt-4 text-center">
+      <p className="mt-4 text-center font-hand text-sm text-ink-soft">
         No account yet?{" "}
-        <a href="/signup" className="text-emerald-400 font-medium hover:underline">
+        <a href="/signup" className="link-btn text-sm">
           Sign up here
         </a>
       </p>

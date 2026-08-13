@@ -6,9 +6,9 @@ export default function PlayerTag({
   discriminator: string;
 }) {
   return (
-    <p className="text-sm">
-      <span className="font-semibold text-white">{displayName}</span>
-      <span className="text-slate-500">#{discriminator}</span>
+    <p className="truncate font-hand text-sm">
+      <span className="font-bold text-ink">{displayName}</span>
+      <span className="text-ink-soft">#{discriminator}</span>
     </p>
   );
 }

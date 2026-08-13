@@ -14,12 +14,12 @@ export default function RoomCodeBadge({ code }: { code: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="flex items-center gap-3 rounded-lg border border-white/15 bg-white/5 px-5 py-2.5 hover:bg-white/10 transition-colors"
+      className="chip-btn flex items-center gap-3 bg-paper-light px-5 py-2.5 hover:bg-brand-blue-light"
     >
-      <span className="font-mono text-lg font-bold tracking-widest text-white">
+      <span className="text-lg font-bold tracking-widest text-brand-maroon">
         {code}
       </span>
-      <span className="text-xs uppercase tracking-wide text-slate-400">
+      <span className="label text-[10px] tracking-wide">
         {copied ? "Copied!" : "Copy"}
       </span>
     </button>

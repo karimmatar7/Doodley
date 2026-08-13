@@ -1,3 +1,5 @@
+import GameScreen from "@/components/ui/GameScreen";
+
 type GameStatusMessageProps = {
   children: React.ReactNode;
 };
@@ -6,10 +8,8 @@ export default function GameStatusMessage({
   children,
 }: GameStatusMessageProps) {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 bg-grid">
-      <p className="text-sm text-slate-400">
-        {children}
-      </p>
-    </main>
+    <GameScreen className="flex items-center justify-center">
+      <p className="font-hand text-sm text-ink-soft">{children}</p>
+    </GameScreen>
   );
 }

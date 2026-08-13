@@ -345,16 +345,17 @@ if (room.status === "solo_ended") {
   const isDrawer = round.drawer_id === myPlayer?.id;
 
   return (
-    <main className="min-h-screen bg-slate-950 bg-grid px-4 py-6">
+    <main className="min-h-screen bg-paper px-4 py-6">
       <div className="mx-auto max-w-4xl space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="sketch-card relative flex items-center justify-between gap-2 p-3">
+          <div className="tape tape-tr" />
           <DoodleyLogo size="text-2xl" />
           {round.status === "drawing" && <RoundTimer endsAt={round.ends_at} />}
           <LeaveGameButton onConfirmLeave={handleLeaveGame} />
         </div>
 
         {round.status === "choosing_word" && (
-          <div className="rounded-xl border border-white/10 bg-white/5 p-8">
+          <div className="sketch-card p-8">
             {isDrawer ? (
               (round.word_choices ?? []).length === 0 ? (
                 <ThemeChoicePanel roundId={round.id} />
@@ -365,7 +366,7 @@ if (room.status === "solo_ended") {
                 />
               )
             ) : (
-              <p className="text-center text-sm text-slate-400">
+              <p className="text-center font-hand text-sm text-ink-soft">
                 Waiting for the drawer to pick a word...
               </p>
             )}
@@ -386,7 +387,7 @@ if (room.status === "solo_ended") {
 )}
 
         {round.status === "ended" && (
-          <div className="mx-auto max-w-md rounded-xl border border-white/10 bg-white/5 p-8">
+          <div className="sketch-card mx-auto max-w-md p-8">
             <RoundEndPanel
               roomId={room.id}
               word={round.word}

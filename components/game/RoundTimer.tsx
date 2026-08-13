@@ -20,7 +20,7 @@ export default function RoundTimer({ endsAt }: { endsAt: string | null }) {
   const isUrgent = secondsLeft <= 10 && secondsLeft > 0;
 
   return (
-    <span className={`font-mono font-bold text-lg ${isUrgent ? "text-brand-maroon animate-pulse-timer" : "text-brand-green"}`}>
+    <span className={`text-lg font-bold ${isUrgent ? "animate-pulse-timer text-brand-maroon" : "text-brand-green"}`}>
       {formatTime(secondsLeft)}
     </span>
   );

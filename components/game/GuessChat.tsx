@@ -63,12 +63,13 @@ export default function GuessChat({
   );
 
   return (
-    <div className="flex flex-col h-80 rounded-lg border border-white/10 bg-white/5 p-3">
-      <div className="flex-1 overflow-y-auto space-y-1 mb-2">
+    <div className="sketch-card relative flex h-80 flex-col p-3">
+      <div className="tape tape-tl" />
+      <div className="mb-2 flex-1 space-y-1 overflow-y-auto">
         {feed.map((item) => {
           if (item.kind === "event") {
             return (
-              <p key={item.key} className="text-sm text-red-400 italic">
+              <p key={item.key} className="text-sm text-brand-maroon italic">
                 {item.message}
               </p>
             );
@@ -78,13 +79,13 @@ export default function GuessChat({
           if (!g) return null;
 
           return (
-            <p key={item.key} className="text-sm">
+            <p key={item.key} className="text-sm font-hand">
               {g.is_correct ? (
-                <span className="text-emerald-400 font-semibold">🎉 {nameFor(g.player_id)} guessed the word!</span>
+                <span className="font-semibold text-brand-green">🎉 {nameFor(g.player_id)} guessed the word!</span>
               ) : (
                 <>
-                  <span className="font-semibold text-white">{nameFor(g.player_id)}: </span>
-                  <span className="text-slate-400">{g.text}</span>
+                  <span className="font-semibold text-ink">{nameFor(g.player_id)}: </span>
+                  <span className="text-ink-soft">{g.text}</span>
                 </>
               )}
             </p>
@@ -93,7 +94,7 @@ export default function GuessChat({
       </div>
 
       {isDrawer ? (
-        <p className="text-sm text-slate-500 text-center">You're drawing! Watch the guesses roll in.</p>
+        <p className="text-center text-sm font-hand text-ink-soft">You're drawing! Watch the guesses roll in.</p>
       ) : (
         <form onSubmit={handleSubmit} className="flex gap-2">
           <div className="flex-1">

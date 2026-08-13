@@ -11,12 +11,9 @@ type ButtonProps = {
 };
 
 const variants = {
-  primary:
-    "bg-brand-maroon text-white hover:bg-brand-maroon/90 border border-brand-maroon/50",
-  secondary:
-    "bg-emerald-700 text-white hover:bg-emerald-700/90 border border-emerald-700/50",
-  outline:
-    "bg-white/5 text-white/90 border border-white/15 hover:bg-white/10 hover:border-white/25",
+  primary: "bg-brand-maroon text-cream hover:bg-brand-maroon-light",
+  secondary: "bg-brand-green text-cream hover:bg-brand-green-light",
+  outline: "bg-paper-light text-ink hover:bg-paper-dark",
 };
 
 export default function Button({
@@ -34,11 +31,11 @@ export default function Button({
       onClick={onClick}
       disabled={disabled}
       className={`
+        sketch-btn
         ${fullWidth ? "w-full" : "w-auto"}
         ${variants[variant]}
         ${className}
-        px-6 py-3 rounded-lg font-medium text-sm sm:text-base
-        transition-colors duration-150
+        px-6 py-3 text-sm sm:text-base font-bold tracking-wide
         disabled:opacity-40 disabled:cursor-not-allowed
       `}
     >

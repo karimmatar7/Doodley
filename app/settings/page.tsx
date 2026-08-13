@@ -214,7 +214,7 @@ export default function SettingsPage() {
   if (profileLoading) {
     return (
       <AuthCard subtitle="Profile and security settings.">
-        <p className="text-sm text-slate-400">
+        <p className="text-sm font-hand text-ink-soft">
           Loading settings...
         </p>
       </AuthCard>
@@ -224,7 +224,7 @@ export default function SettingsPage() {
   if (!profile) {
     return (
       <AuthCard subtitle="Profile and security settings.">
-        <p className="text-sm text-slate-400">
+        <p className="text-sm font-hand text-ink-soft">
           Please log in to manage your settings.
         </p>
       </AuthCard>
@@ -287,7 +287,7 @@ export default function SettingsPage() {
         <ErrorMessage message={error} />
 
         {success && (
-          <p className="text-sm text-emerald-400">
+          <p className="text-sm font-hand text-brand-green">
             {success}
           </p>
         )}

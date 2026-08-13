@@ -14,7 +14,7 @@ export default function FriendsListPanel({
 
   return (
     <div className="w-full max-w-md space-y-2">
-      <p className="text-xs uppercase tracking-widest text-slate-500">Friends</p>
+      <p className="label">Friends</p>
       {friends.map((f) => (
         <FriendListItem
           key={f.id}

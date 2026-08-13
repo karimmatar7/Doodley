@@ -182,7 +182,7 @@ export default function RoomView({
       />
 
       {leaveError && (
-        <p className="fixed bottom-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-lg border border-red-400/30 bg-red-950/90 px-4 py-3 text-center text-sm text-red-300">
+        <p className="sketch-card fixed bottom-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 px-4 py-3 text-center font-hand text-sm text-brand-maroon">
           {leaveError}
         </p>
       )}

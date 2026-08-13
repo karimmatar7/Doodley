@@ -13,13 +13,15 @@ export default function FriendRequestItem({
   onDecline: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between bg-brand-blue-light rounded-lg px-4 py-2 animate-pop-in">
-      <PlayerTag displayName={displayName} discriminator={discriminator} />
-      <div className="flex gap-2">
-        <Button variant="secondary" fullWidth={false} onClick={onAccept}>
+    <div className="flex items-center justify-between gap-2 border-2 border-ink/20 bg-brand-blue-light px-3 py-2 animate-pop-in">
+      <div className="min-w-0 flex-1">
+        <PlayerTag displayName={displayName} discriminator={discriminator} />
+      </div>
+      <div className="flex shrink-0 items-center gap-1.5">
+        <Button variant="secondary" fullWidth={false} onClick={onAccept} className="shrink-0 !px-2 !py-1 !text-xs">
           Accept
         </Button>
-        <Button variant="outline" fullWidth={false} onClick={onDecline}>
+        <Button variant="outline" fullWidth={false} onClick={onDecline} className="shrink-0 !px-2 !py-1 !text-xs">
           Decline
         </Button>
       </div>

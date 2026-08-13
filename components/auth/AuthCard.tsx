@@ -1,4 +1,5 @@
 import DoodleyLogo from "@/components/DoodleyLogo";
+import GameScreen from "@/components/ui/GameScreen";
 
 export default function AuthCard({
   subtitle,
@@ -8,16 +9,17 @@ export default function AuthCard({
   children: React.ReactNode;
 }) {
   return (
-    <main className="relative min-h-screen bg-slate-950 bg-grid flex items-center justify-center px-4">
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950 via-transparent to-slate-950" />
-
-      <div className="relative z-10 w-full max-w-md rounded-xl border border-white/10 bg-slate-900 shadow-2xl p-8">
+    <GameScreen className="flex items-center justify-center">
+      <div className="sketch-card relative w-full max-w-md p-8">
+        <div className="tape tape-tl" />
         <div className="flex justify-center mb-4">
           <DoodleyLogo />
         </div>
-        <p className="text-slate-400 mb-6 text-sm text-center">{subtitle}</p>
+        {subtitle && (
+          <p className="mb-6 text-center font-hand text-sm text-ink-soft">{subtitle}</p>
+        )}
         {children}
       </div>
-    </main>
+    </GameScreen>
   );
 }

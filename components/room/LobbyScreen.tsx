@@ -4,6 +4,7 @@ import DoodleyLogo from "@/components/DoodleyLogo";
 import PlayerListItem from "@/components/room/PlayerListItem";
 import Button from "@/components/ui/Button";
 import RoomInvite from "@/components/room/RoomInvite";
+import GameScreen from "@/components/ui/GameScreen";
 
 type LobbyPlayer = {
   id: string;
@@ -53,39 +54,27 @@ export default function LobbyScreen({
   getFriendStatus,
 }: LobbyScreenProps) {
   return (
-    <main className="relative flex min-h-screen items-center justify-center bg-slate-950 bg-grid px-4 py-8 sm:px-6 sm:py-10">
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950 via-transparent to-slate-950" />
-
-      <div className="relative z-10 flex w-full max-w-sm flex-col gap-6 sm:max-w-md">
-<div className="flex flex-col items-center gap-4">
+    <GameScreen className="flex items-center justify-center">
+      <div className="flex w-full max-w-sm flex-col gap-6 sm:max-w-md">
+        <div className="flex flex-col items-center gap-4">
           <DoodleyLogo size="text-4xl sm:text-5xl" />
 
-        <div className="flex justify-center">
-          <div className="flex w-full flex-col items-center gap-4 sm:flex-row sm:items-start sm:justify-center">
-<RoomInvite
-  code={roomCode}
-  joinUrl={joinUrl}
-  isHost={isHost}
-/>
+          <RoomInvite code={roomCode} joinUrl={joinUrl} isHost={isHost} />
         </div>
 
-</div>
-        </div>
+        <div className="divider" />
 
-        <section className="space-y-3 border-t border-white/10 pt-6">
-          <p className="text-xs uppercase tracking-widest text-slate-500">
-            Players ({players.length})
-          </p>
+        <section className="space-y-3">
+          <p className="label">Players ({players.length})</p>
 
           {playersLoading ? (
-            <p className="text-sm text-slate-500">
+            <p className="text-sm font-hand text-ink-soft">
               Loading players...
             </p>
           ) : (
             <div className="space-y-2">
               {players.map((player) => {
-                const isMe =
-                  player.profile_id === currentProfileId;
+                const isMe = player.profile_id === currentProfileId;
 
                 return (
                   <PlayerListItem
@@ -111,7 +100,9 @@ export default function LobbyScreen({
           )}
         </section>
 
-        <section className="space-y-3 border-t border-white/10 pt-6">
+        <div className="divider" />
+
+        <section className="space-y-3">
           {isHost ? (
             <Button
               type="button"
@@ -126,7 +117,7 @@ export default function LobbyScreen({
                   : "Start game"}
             </Button>
           ) : (
-            <p className="text-center text-sm text-slate-500">
+            <p className="text-center font-hand text-sm text-ink-soft">
               Waiting for the host to start the game...
             </p>
           )}
@@ -142,6 +133,6 @@ export default function LobbyScreen({
           </Button>
         </section>
       </div>
-    </main>
+    </GameScreen>
   );
 }

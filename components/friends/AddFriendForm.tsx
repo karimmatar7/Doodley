@@ -37,8 +37,8 @@ export default function AddFriendForm({
       <Button type="submit" disabled={loading || !value.trim()}>
         {loading ? "Sending..." : "Add friend"}
       </Button>
-      {message && <p className="text-xs text-emerald-400">{message}</p>}
-      {error && <p className="text-xs text-rose-400">{error}</p>}
+      {message && <p className="text-xs font-hand text-brand-green">{message}</p>}
+      {error && <p className="text-xs font-hand text-brand-maroon">{error}</p>}
     </form>
   );
 }
