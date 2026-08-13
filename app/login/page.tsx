@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import AuthCard from "@/components/auth/AuthCard";
 import Input from "@/components/ui/Input";
+import PasswordInput from "@/components/ui/PasswordInput";
 import Button from "@/components/ui/Button";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import GuestLoginButton from "@/components/auth/GuestLoginButton";
@@ -102,7 +103,7 @@ export default function LoginPage() {
     <AuthCard subtitle="Log in to draw and guess.">
       <form onSubmit={handleLogin} className="space-y-4">
         <Input label="Email" type="email" required value={email} onChange={setEmail} />
-        <Input label="Password" type="password" required value={password} onChange={setPassword} />
+        <PasswordInput label="Password" required value={password} onChange={setPassword} />
 
         <div className="-mt-1 flex justify-end">
           <button

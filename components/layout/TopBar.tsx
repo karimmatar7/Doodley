@@ -7,6 +7,7 @@ import { FriendRow } from "@/lib/hooks/useFriends";
 import { useProfile } from "@/lib/hooks/useProfile";
 import FriendsDrawer from "@/components/friends/FriendsDrawer";
 import ProfileDrawer from "@/components/layout/ProfileDrawer";
+import ConfirmModal from "@/components/ui/ConfirmModal";
 
 type TopBarProps = {
   friends: FriendRow[];
@@ -29,12 +30,14 @@ export default function TopBar({
 }: TopBarProps) {
   const [friendsOpen, setFriendsOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
   const router = useRouter();
   const supabase = createClient();
   const { profile } = useProfile();
 
   async function handleLogout() {
+    setLogoutOpen(false);
     await supabase.auth.signOut();
     router.push("/");
     router.refresh();
@@ -114,12 +117,23 @@ export default function TopBar({
         {/* Logout */}
         <button
           type="button"
-          onClick={handleLogout}
+          onClick={() => setLogoutOpen(true)}
           className="chip-btn flex h-11 items-center bg-paper-light px-4 text-sm font-bold text-ink hover:bg-paper-dark"
         >
           Log out
         </button>
       </div>
+
+      {logoutOpen && (
+        <ConfirmModal
+          title="Log out"
+          message="Are you sure you want to log out?"
+          confirmLabel="Log out"
+          cancelLabel="Cancel"
+          onConfirm={handleLogout}
+          onCancel={() => setLogoutOpen(false)}
+        />
+      )}
     </div>
   );
 }

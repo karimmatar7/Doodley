@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { validatePassword } from "@/lib/validation/password";
 import AuthCard from "@/components/auth/AuthCard";
 import Input from "@/components/ui/Input";
+import PasswordInput from "@/components/ui/PasswordInput";
 import Button from "@/components/ui/Button";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import PasswordHint from "@/components/ui/PasswordHint";
@@ -71,7 +72,7 @@ export default function SignupPage() {
       <form onSubmit={handleSignup} className="space-y-3">
         <Input label="Player name" required maxLength={20} value={displayName} onChange={setDisplayName} />
         <Input label="Email" type="email" required value={email} onChange={setEmail} />
-        <Input label="Password" type="password" required minLength={8} value={password} onChange={setPassword} />
+        <PasswordInput label="Password" required minLength={8} value={password} onChange={setPassword} />
         <PasswordHint password={password} />
         <ErrorMessage message={error} />
         <Button type="submit" disabled={loading}>

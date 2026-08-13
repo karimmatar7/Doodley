@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { validatePassword } from "@/lib/validation/password";
 import AuthCard from "@/components/auth/AuthCard";
-import Input from "@/components/ui/Input";
+import PasswordInput from "@/components/ui/PasswordInput";
 import Button from "@/components/ui/Button";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import PasswordHint from "@/components/ui/PasswordHint";
@@ -58,7 +58,7 @@ export default function ResetPasswordPage() {
   return (
     <AuthCard subtitle="Choose a new password.">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Input label="New password" type="password" required minLength={8} value={password} onChange={setPassword} />
+        <PasswordInput label="New password" required minLength={8} value={password} onChange={setPassword} />
         <PasswordHint password={password} />
         <ErrorMessage message={error} />
         <Button type="submit" disabled={loading}>

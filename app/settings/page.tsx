@@ -14,6 +14,7 @@ import { validatePassword } from "@/lib/validation/password";
 
 import AuthCard from "@/components/auth/AuthCard";
 import Input from "@/components/ui/Input";
+import PasswordInput from "@/components/ui/PasswordInput";
 import Button from "@/components/ui/Button";
 import BackButton from "@/components/ui/BackButton";
 import ErrorMessage from "@/components/ui/ErrorMessage";
@@ -264,17 +265,15 @@ export default function SettingsPage() {
           onToggle={togglePasswordField}
         >
           <div className="space-y-4">
-            <Input
+            <PasswordInput
               label="Current password"
-              type="password"
               required
               value={oldPassword}
               onChange={setOldPassword}
             />
 
-            <Input
+            <PasswordInput
               label="New password"
-              type="password"
               required
               value={newPassword}
               onChange={setNewPassword}
